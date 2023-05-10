@@ -18,21 +18,30 @@ const createCard = (req, res) => {
 const deleteCard = (req, res) => {
 
     Card.findByIdAndRemove(req.params.cardid)
-        .then(user => res.send({ data: user }))
+        .then(card => res.send({ data: card }))
         .catch(err => res.status(500).send({ message: 'Произошла ошибка' }));
 }
 
-const likeCard = (req, res) => Card.findByIdAndUpdate(
-    req.params.cardId,
-    { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
-    { new: true },
-)
+const likeCard = (req, res) => {
+    Card.findByIdAndUpdate(
+        req.params.cardid,
+        { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
+        { new: true },
+    )
 
-const dislikeCard = (req, res) => Card.findByIdAndUpdate(
-    req.params.cardId,
-    { $pull: { likes: req.user._id } }, // убрать _id из массива
-    { new: true },
-)
+        .then(card => res.send({ data: card }))
+        .catch(err => res.status(500).send({ message: 'Произошла ошибка' }));
+}
+
+const dislikeCard = (req, res) => {
+    Card.findByIdAndUpdate(
+        req.params.cardid,
+        { $pull: { likes: req.user._id } }, // убрать _id из массива
+        { new: true },
+    )
+        .then(card => res.send({ data: card }))
+        .catch(err => res.status(500).send({ message: 'Произошла ошибка' }));
+}
 
 module.exports = {
     getCards,
