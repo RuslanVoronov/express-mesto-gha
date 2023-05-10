@@ -50,14 +50,13 @@ const updateUser = (req, res) => {
             upsert: true
         }
     )
-        .orFail(new Error("NotValidId"))
         .then(user => res.send({ data: user }))
         .catch((err) => {
-            if (err.message === "ValidationError") {
+            if (err.name === "ValidationError") {
                 res.status(400).send({ message: 'Поля неверно заполнены' })
-            }
-            if (err.message === "NotValidId") {
-                res.status(404).send({ message: 'Пользователь не найден' })
+                // }
+                // if (err.message === "NotValidId") {
+                //     res.status(404).send({ message: 'Пользователь не найден' })
             } else {
                 res.status(500).send({ message: 'Произошла ошибка' });
             }

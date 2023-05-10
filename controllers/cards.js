@@ -11,15 +11,29 @@ const createCard = (req, res) => {
     const userId = req.user._id;
     Card.create({ name, link, owner: userId })
         .then(card => res.status(200).send({ data: card }))
-        .catch(err => res.status(500).send({ message: 'Что-то пошло не так' }));
+        .catch(err => {
+            if (err.name === "ValidationError") {
+                res.status(400).send({ message: 'Поля неверно заполнены' })
+
+            } else {
+                res.status(500).send({ message: 'Что-то пошло не так' })
+            }
+        });
 
 }
 
 const deleteCard = (req, res) => {
 
     Card.findByIdAndRemove(req.params.cardid)
+        .orFail(new Error("NotValidId"))
         .then(card => res.send({ data: card }))
-        .catch(err => res.status(500).send({ message: 'Произошла ошибка' }));
+        .catch(err => {
+            if (err.message === "NotValidId") {
+                res.status(404).send({ message: 'Некорректный id' })
+            } else {
+                res.status(500).send({ message: 'Что-то пошло не так' })
+            }
+        });
 }
 
 const likeCard = (req, res) => {
@@ -28,9 +42,15 @@ const likeCard = (req, res) => {
         { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
         { new: true },
     )
-
+        .orFail(new Error("NotValidId"))
         .then(card => res.send({ data: card }))
-        .catch(err => res.status(500).send({ message: 'Произошла ошибка' }));
+        .catch(err => {
+            if (err.message === "NotValidId") {
+                res.status(404).send({ message: 'Некорректный id' })
+            } else {
+                res.status(500).send({ message: 'Что-то пошло не так' })
+            }
+        });
 }
 
 const dislikeCard = (req, res) => {
@@ -39,8 +59,15 @@ const dislikeCard = (req, res) => {
         { $pull: { likes: req.user._id } }, // убрать _id из массива
         { new: true },
     )
+        .orFail(new Error("NotValidId"))
         .then(card => res.send({ data: card }))
-        .catch(err => res.status(500).send({ message: 'Произошла ошибка' }));
+        .catch(err => {
+            if (err.message === "NotValidId") {
+                res.status(404).send({ message: 'Некорректный id' })
+            } else {
+                res.status(500).send({ message: 'Что-то пошло не так' })
+            }
+        });
 }
 
 module.exports = {
