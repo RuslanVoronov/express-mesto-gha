@@ -10,18 +10,15 @@ const getUsers = (req, res) => {
 
 const getUserById = (req, res) => {
     const { id } = req.params;
-
     User.findById(id)
-        .orFail(() => {
-            throw new Error("Not found")
-        })
-
+        .orFail(new Error("NotValidId"))
         .then((user) => {
+
             res.status(200).send({ user })
         })
-
         .catch((err) => {
-            if (err.message == "Not found") {
+            console.log(err.message)
+            if (err.message === "NotValidId") {
                 res.status(404).send({ message: 'Пользователь не найден' })
             } else {
                 res.status(500).send({ message: 'Что-то пошло не так' })
@@ -36,8 +33,6 @@ const createUser = (req, res) => {
         .then(user => res.status(200).send({ data: user }))
 
         .catch((err) => {
-            console.log('error =>', err.errors)
-
             if (err.message = "ValidationError") {
                 res.status(400).send({ message: 'Поля неверно заполнены' })
             } else {
@@ -55,8 +50,18 @@ const updateUser = (req, res) => {
             upsert: true
         }
     )
+        .orFail(new Error("NotValidId"))
         .then(user => res.send({ data: user }))
-        .catch(err => res.status(500).send({ message: "Данные не прошли валидацию. Либо произошло что-то совсем немыслимое" }));
+        .catch((err) => {
+            if (err.message === "ValidationError") {
+                res.status(400).send({ message: 'Поля неверно заполнены' })
+            }
+            if (err.message === "NotValidId") {
+                res.status(404).send({ message: 'Пользователь не найден' })
+            } else {
+                res.status(500).send({ message: 'Произошла ошибка' });
+            }
+        })
 }
 
 const updateAvatar = (req, res) => {
