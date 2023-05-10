@@ -12,5 +12,20 @@
     "start": "node app.js",
     "dev": "nodemon app.js",
     "lint": "npx eslint"
-  }
+  },
+  "name": "express",
+  "version": "1.0.0",
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RuslanVoronov/express-mesto-gha.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RuslanVoronov/express-mesto-gha/issues"
+  },
+  "homepage": "https://github.com/RuslanVoronov/express-mesto-gha#readme",
+  "description": ""
 }

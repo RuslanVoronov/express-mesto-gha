@@ -1,15 +1,14 @@
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
-const bodyParse = require('body-parse')
-const routes = require('./routes')
+const bodyParse = require('body-parser');
+const users = require('./user-db.json')
+
+const routes = require('./routes');
+
 const { PORT = 3000 } = process.env;
 
-mongoose.connect('mongodb://localhost:27017/mestodb', {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useFindAndModify: false
-});
+mongoose.connect('mongodb://127.0.0.1:27017/mesto');
 
 const app = express();
 
@@ -22,8 +21,9 @@ app.use((req, res, next) => {
 
     next();
 });
+
 app.use(routes);
 
 app.listen(PORT, () => {
-    console.log('Privet))');
+    console.log(`Ваш сервер был запущен на порту : ${PORT}`);
 })
