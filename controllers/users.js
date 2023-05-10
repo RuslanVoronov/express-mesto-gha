@@ -10,7 +10,7 @@ const getUsers = (req, res) => {
 
 const getUserById = (req, res) => {
     const { id } = req.params;
-    
+
     User.findById(id)
         .orFail(() => {
             throw new Error("Not found")
@@ -47,11 +47,29 @@ const createUser = (req, res) => {
 }
 
 const updateUser = (req, res) => {
-    User.findByIdAndUpdate(req.params.id, { name, about })
+    const { name, about } = req.body;
+    User.findByIdAndUpdate(req.user._id, { name, about },
+        {
+            new: true,
+            runValidators: true,
+            upsert: true
+        }
+    )
+        .then(user => res.send({ data: user }))
+        .catch(err => res.status(500).send({ message: "Данные не прошли валидацию. Либо произошло что-то совсем немыслимое" }));
 }
 
 const updateAvatar = (req, res) => {
-    User.findByIdAndUpdate(req.params.id, { avatar })
+    const { avatar } = req.body;
+    User.findByIdAndUpdate(req.user._id, { avatar },
+        {
+            new: true,
+            runValidators: true,
+            upsert: true
+        }
+    )
+        .then(user => res.send({ data: user }))
+        .catch(err => res.status(500).send({ message: "Данные не прошли валидацию. Либо произошло что-то совсем немыслимое" }));
 }
 
 module.exports = {
