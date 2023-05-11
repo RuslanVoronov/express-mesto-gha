@@ -16,7 +16,7 @@ const createCard = (req, res) => {
                 res.status(400).send({ message: 'Поля неверно заполнены' })
 
             } else {
-                res.status(500).send({ message: 'Что-то пошло не так' })
+                res.status(500).send({ message: 'На сервере произошла ошибка' })
             }
         });
 
@@ -35,7 +35,7 @@ const deleteCard = (req, res) => {
             if (err.message === "NotValidId") {
                 res.status(404).send({ message: 'Несуществующий в БД id карточки' })
             } else {
-                res.status(500).send({ message: 'Что-то пошло не так' })
+                res.status(500).send({ message: 'На сервере произошла ошибка' })
             }
         });
 }
@@ -57,7 +57,7 @@ const likeCard = (req, res) => {
             if (err.message === "NotValidId") {
                 res.status(404).send({ message: 'Несуществующий в БД id карточки' })
             } else {
-                res.status(500).send({ message: 'Что-то пошло не так' })
+                res.status(500).send({ message: 'На сервере произошла ошибка' })
             }
         });
 }
@@ -81,7 +81,7 @@ const dislikeCard = (req, res) => {
                 res.status(404).send({ message: 'Несуществующий в БД id карточки' })
             } else {
                 console.log(err.message)
-                res.status(500).send({ message: 'Что-то пошло не так' })
+                res.status(500).send({ message: 'На сервере произошла ошибка' })
 
             }
         });

@@ -1,11 +1,10 @@
 const User = require('../models/user')
-// const users = require('../user-db.json')
 
 const getUsers = (req, res) => {
     User.find().then(users => {
         res.send({ data: users })
     })
-        .catch(err => res.status(500).send({ message: 'Что-то пошло не так' }))
+        .catch(err => res.status(500).send({ message: 'На сервере произошла ошибка' }))
 }
 
 const getUserById = (req, res) => {
@@ -23,7 +22,7 @@ const getUserById = (req, res) => {
             if (err.message === "NotValidId") {
                 res.status(404).send({ message: 'Пользователь не найден' })
             } else {
-                res.status(500).send({ message: 'Что-то пошло не так' })
+                res.status(500).send({ message: 'На сервере произошла ошибка' })
             }
         })
 }
@@ -38,7 +37,7 @@ const createUser = (req, res) => {
             if (err.message = "ValidationError") {
                 res.status(400).send({ message: 'Поля неверно заполнены' })
             } else {
-                res.status(500).send({ message: 'Произошла ошибка' });
+                res.status(500).send({ message: 'На сервере произошла ошибка' });
             }
         })
 }
@@ -56,11 +55,8 @@ const updateUser = (req, res) => {
         .catch((err) => {
             if (err.name === "ValidationError") {
                 res.status(400).send({ message: 'Поля неверно заполнены' })
-                // }
-                // if (err.message === "NotValidId") {
-                //     res.status(404).send({ message: 'Пользователь не найден' })
             } else {
-                res.status(500).send({ message: 'Произошла ошибка' });
+                res.status(500).send({ message: 'На сервере произошла ошибка' });
             }
         })
 }
@@ -75,7 +71,7 @@ const updateAvatar = (req, res) => {
         }
     )
         .then(user => res.send({ data: user }))
-        .catch(err => res.status(500).send({ message: "Данные не прошли валидацию. Либо произошло что-то совсем немыслимое" }));
+        .catch(err => res.status(500).send({ message: "На сервере произошла ошибка" }));
 }
 
 module.exports = {
