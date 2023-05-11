@@ -23,11 +23,20 @@ const createCard = (req, res) => {
 }
 
 const deleteCard = (req, res) => {
-    const { id } = req.params.cardid;
+    const id = req.params.cardid;
     Card.findByIdAndRemove(id)
+        .orFail(new Error("NotValidId"))
         .then(card => res.send({ data: card }))
         .catch(err => {
-            res.status(500).send({ message: 'Что-то пошло не так' })
+            if (err.name === "CastError") {
+                res.status(400).send({ message: 'Некорректный id' })
+                return
+            };
+            if (err.message === "NotValidId") {
+                res.status(404).send({ message: 'Несуществующий в БД id карточки' })
+            } else {
+                res.status(500).send({ message: 'Что-то пошло не так' })
+            }
         });
 }
 
@@ -41,18 +50,20 @@ const likeCard = (req, res) => {
         .orFail(new Error("NotValidId"))
         .then(card => res.send({ data: card }))
         .catch(err => {
-            if (err.message === "NotValidId") {
+            if (err.name === "CastError") {
                 res.status(400).send({ message: 'Некорректный id' })
+                return
+            };
+            if (err.message === "NotValidId") {
+                res.status(404).send({ message: 'Несуществующий в БД id карточки' })
             } else {
                 res.status(500).send({ message: 'Что-то пошло не так' })
-                console.log(err.message)
-
             }
         });
 }
 
 const dislikeCard = (req, res) => {
-    const { id } = req.params.cardid;
+    const id = req.params.cardid;
     console.log(id)
     Card.findByIdAndUpdate(
         id,
@@ -62,10 +73,16 @@ const dislikeCard = (req, res) => {
         .orFail(new Error("NotValidId"))
         .then(card => res.send({ data: card }))
         .catch(err => {
-            if (err.message === "NotValidId") {
+            if (err.name === "CastError") {
                 res.status(400).send({ message: 'Некорректный id' })
+                return
+            };
+            if (err.message === "NotValidId") {
+                res.status(404).send({ message: 'Несуществующий в БД id карточки' })
             } else {
+                console.log(err.message)
                 res.status(500).send({ message: 'Что-то пошло не так' })
+
             }
         });
 }
