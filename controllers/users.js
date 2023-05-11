@@ -10,16 +10,16 @@ const getUsers = (req, res) => {
 
 const getUserById = (req, res) => {
     const { id } = req.params;
+    console.log(id)
     User.findById(id)
         .orFail(new Error("NotValidId"))
         .then((user) => {
-
-            res.status(200).send({ user })
+            res.status(200).send({ data: user })
         })
         .catch((err) => {
             console.log(err.message)
             if (err.message === "NotValidId") {
-                res.status(404).send({ message: 'Пользователь не найден' })
+                res.status(400).send({ message: 'Пользователь не найден' })
             } else {
                 res.status(500).send({ message: 'Что-то пошло не так' })
             }

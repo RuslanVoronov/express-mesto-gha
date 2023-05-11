@@ -25,20 +25,14 @@ const createCard = (req, res) => {
 const deleteCard = (req, res) => {
     const { id } = req.params.cardid;
     Card.findByIdAndRemove(id)
-        .orFail(new Error("NotValidId"))
         .then(card => res.send({ data: card }))
         .catch(err => {
-            if (err.message === "NotValidId") {
-                res.status(404).send({ message: 'Некорректный id' })
-            } else {
-                res.status(500).send({ message: 'Что-то пошло не так' })
-                console.log(err.message)
-            }
+            res.status(500).send({ message: 'Что-то пошло не так' })
         });
 }
 
 const likeCard = (req, res) => {
-    const { id } = req.params.cardid;
+    const id = req.params.cardid;
     Card.findByIdAndUpdate(
         id,
         { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
@@ -48,15 +42,18 @@ const likeCard = (req, res) => {
         .then(card => res.send({ data: card }))
         .catch(err => {
             if (err.message === "NotValidId") {
-                res.status(404).send({ message: 'Некорректный id' })
+                res.status(400).send({ message: 'Некорректный id' })
             } else {
                 res.status(500).send({ message: 'Что-то пошло не так' })
+                console.log(err.message)
+
             }
         });
 }
 
 const dislikeCard = (req, res) => {
     const { id } = req.params.cardid;
+    console.log(id)
     Card.findByIdAndUpdate(
         id,
         { $pull: { likes: req.user._id } }, // убрать _id из массива
@@ -66,7 +63,7 @@ const dislikeCard = (req, res) => {
         .then(card => res.send({ data: card }))
         .catch(err => {
             if (err.message === "NotValidId") {
-                res.status(404).send({ message: 'Некорректный id' })
+                res.status(400).send({ message: 'Некорректный id' })
             } else {
                 res.status(500).send({ message: 'Что-то пошло не так' })
             }
