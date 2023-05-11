@@ -23,8 +23,8 @@ const createCard = (req, res) => {
 }
 
 const deleteCard = (req, res) => {
-
-    Card.findByIdAndRemove(req.params.cardid)
+    const { id } = req.params.cardid;
+    Card.findByIdAndRemove(id)
         .orFail(new Error("NotValidId"))
         .then(card => res.send({ data: card }))
         .catch(err => {
@@ -32,13 +32,15 @@ const deleteCard = (req, res) => {
                 res.status(404).send({ message: 'Некорректный id' })
             } else {
                 res.status(500).send({ message: 'Что-то пошло не так' })
+                console.log(err.message)
             }
         });
 }
 
 const likeCard = (req, res) => {
+    const { id } = req.params.cardid;
     Card.findByIdAndUpdate(
-        req.params.cardid,
+        id,
         { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
         { new: true },
     )
@@ -54,8 +56,9 @@ const likeCard = (req, res) => {
 }
 
 const dislikeCard = (req, res) => {
+    const { id } = req.params.cardid;
     Card.findByIdAndUpdate(
-        req.params.cardid,
+        id,
         { $pull: { likes: req.user._id } }, // убрать _id из массива
         { new: true },
     )
