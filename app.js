@@ -2,8 +2,9 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const bodyParse = require('body-parser');
-
 const routes = require('./routes');
+const auth = require('./middlewares/auth.js')
+const {login, createUser} = require('./controllers/users')
 
 const { PORT = 3000 } = process.env;
 
@@ -19,6 +20,11 @@ app.use((req, res, next) => {
     };
     next();
 });
+
+app.post('/signin', login);
+app.post('/signup', createUser);
+
+app.use(auth);
 
 app.use(routes);
 
