@@ -20,7 +20,7 @@ const getCurrentUser = (req, res) => {
 };
 
 const getUserById = (req, res) => {
-
+console.log(req.params)
     const { id } = req.params;
     User.findById(id)
         .orFail(new Error("NotValidId"))
