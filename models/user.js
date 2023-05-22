@@ -8,20 +8,20 @@ const userSchema = new mongoose.Schema({
         minlength: 2,
         maxlength: 30,
         default: 'Жак-Ив Кусто',
-        validate: {
-            validator: ({ length }) => length >= 2 && length <= 30,
-            message: 'Имя пользователя должно быть длиной от 2 до 30 символов',
-        },
+        // validate: {
+        //     validator: ({ length }) => length >= 2 && length <= 30,
+        //     message: 'Имя пользователя должно быть длиной от 2 до 30 символов',
+        // },
     },
     about: {
         type: String,
         minlength: 2,
         maxlength: 30,
         default: 'Исследователь',
-        validate: {
-            validator: ({ length }) => length >= 2 && length <= 30,
-            message: 'Имя пользователя должно быть длиной от 2 до 30 символов',
-        },
+        // validate: {
+        //     validator: ({ length }) => length >= 2 && length <= 30,
+        //     message: 'Имя пользователя должно быть длиной от 2 до 30 символов',
+        // },
     },
     avatar: {
         type: String,
@@ -36,14 +36,19 @@ const userSchema = new mongoose.Schema({
         require: true,
         unique: true,
         validate: {
-            validator: (email) => /.+@.+\..+/.test(email),
-            message: 'Требуется ввести электронный адрес',
-        },
+            validator: (string) => {
+              validator.isEmail(string);
+            },
+          },
+        // validate: {
+        //     validator: (email) => /.+@.+\..+/.test(email),
+        //     message: 'Требуется ввести электронный адрес',
+        // },
     },
     password: {
         type: String,
         require: true,
-        // select: false,
+        select: false,
     }
 });
 

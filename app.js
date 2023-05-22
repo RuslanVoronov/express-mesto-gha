@@ -9,6 +9,7 @@ const { celebrate } = require('celebrate');
 const Joi = require('joi');
 const { PORT = 3000 } = process.env;
 const cookieParser = require('cookie-parser');
+const { errors } = require('celebrate');
 
 mongoose.connect('mongodb://127.0.0.1:27017/mesto');
 
@@ -39,7 +40,7 @@ app.post('/signup', celebrate({
         about: Joi.string().min(2).max(30),
     })
 }), createUser);
-
+app.use(errors())
 app.use(cookieParser());
 app.use(auth);
 

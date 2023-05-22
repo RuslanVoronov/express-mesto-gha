@@ -95,7 +95,7 @@ const login = (req, res) => {
             res.cookie('token', token, { httpOnly: true });
             res.send({ token });
         })
-        .catch(err => res.send({ message: "Произошла ошибка" }))
+        .catch(err => res.status(401).send({ message: "Произошла ошибка" }))
 };
 
 module.exports = {
