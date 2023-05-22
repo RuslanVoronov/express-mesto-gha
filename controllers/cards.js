@@ -27,7 +27,7 @@ const deleteCard = (req, res) => {
     Card.findByIdAndRemove(id)
         .orFail(new Error("NotValidId"))
         .then(card => {
-            if (card.owner !== req.user._id) {
+            if (card.owner.toString() !== req.user._id) {
                 res.status(403).send({ message: 'Удалять можно только свои карточки' })
                 return
             };
