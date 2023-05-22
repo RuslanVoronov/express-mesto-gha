@@ -9,7 +9,18 @@ const getUsers = (req, res) => {
         .catch(err => res.status(500).send({ message: 'На сервере произошла ошибка' }))
 }
 
+const getCurrentUser = (req, res) => {
+    const id = req.user._id;
+    User.findById(id)
+        .then((user) => {
+            console.log(id)
+            res.status(200).send({ data: user })
+        })
+        .catch((err) => res.status(500).send({ message: ' ошибка' }))
+};
+
 const getUserById = (req, res) => {
+
     const { id } = req.params;
     User.findById(id)
         .orFail(new Error("NotValidId"))
@@ -78,28 +89,13 @@ const updateAvatar = (req, res) => {
 
 const login = (req, res) => {
     const { email, password } = req.body;
-    User.findOne({email})
-    .then((user) => {
-        if(!user){
-            return Promise.reject(new Error('Неправильные почта или пароль'));
-        } 
-            console.log({ _id: user._id })
-
-        const token = jwt.sign({ _id: user._id }, 'some-secret-key',{ expiresIn: '7d' });
-        console.log(token)
-
-        return bcrypt.compare(password, user.password);
-})
-.then((matched) => {
-    console.log(matched)
-    if(!matched) {
-        return Promise.reject(new Error('Неправильные почта или пароль'));
-    }
-    res.send({message: "Всё ОК"})
-})
-    .catch(err => res.send({message: "Произошла ошибка"}))
-
-
+    User.findUserByCredentials(email, password)
+        .then((user) => {
+            const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
+            res.cookie('token', token, { httpOnly: true });
+            res.send({ token });
+        })
+        .catch(err => res.send({ message: "Произошла ошибка" }))
 };
 
 module.exports = {
@@ -108,5 +104,6 @@ module.exports = {
     createUser,
     updateUser,
     updateAvatar,
+    getCurrentUser,
     login
 }
