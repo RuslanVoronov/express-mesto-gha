@@ -20,7 +20,7 @@ const getCurrentUser = (req, res) => {
 };
 
 const getUserById = (req, res) => {
-console.log(req.params)
+    console.log(req.params)
     const { id } = req.params;
     User.findById(id)
         .orFail(new Error("NotValidId"))
@@ -45,8 +45,18 @@ const createUser = (req, res) => {
     const { name, about, avatar, email, password } = req.body;
     bcrypt.hash(password, 10)
         .then(hash => User.create({ name, about, avatar, email, password: hash }))
-        .then(user => res.status(200).send({ data: user }))
+        .then(user => res.status(200).send({
+            _id: user._id,
+            name: user.name,
+            about: user.about,
+            avatar: user.avatar,
+            email: user.email,
+        }))
         .catch((err) => {
+            if (err.code === 11000) {
+                res.status(409).send({ message: 'Пользователь с таким email уже существует' })
+                return
+            }
             if (err.message = "ValidationError") {
                 res.status(400).send({ message: 'Поля неверно заполнены' })
             } else {
