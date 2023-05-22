@@ -4,9 +4,11 @@ const mongoose = require('mongoose');
 const bodyParse = require('body-parser');
 const routes = require('./routes');
 const auth = require('./middlewares/auth.js')
-const {login, createUser} = require('./controllers/users')
-
+const { createUser, login } = require('./controllers/users')
+const { celebrate } = require('celebrate');
+const Joi = require('joi');
 const { PORT = 3000 } = process.env;
+const cookieParser = require('cookie-parser');
 
 mongoose.connect('mongodb://127.0.0.1:27017/mesto');
 
@@ -14,16 +16,31 @@ const app = express();
 
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(bodyParse.json())
-app.use((req, res, next) => {
-    req.user = {
-        _id: '6459a57c993e0ee47b75a9f2' // вставьте сюда _id созданного в предыдущем пункте пользователя
-    };
-    next();
-});
+// app.use((req, res, next) => {
+//     req.user = {
+//         _id: '6459a57c993e0ee47b75a9f2' // вставьте сюда _id созданного в предыдущем пункте пользователя
+//     };
+//     next();
+// });
 
-app.post('/signin', login);
-app.post('/signup', createUser);
+app.post('/signin', celebrate({
+    body: Joi.object().keys({
+        email: Joi.string().required().email(),
+        password: Joi.string().required().min(8),
+        name: Joi.string().min(2).max(30),
+        about: Joi.string().min(2).max(30),
+    })
+}), login);
+app.post('/signup', celebrate({
+    body: Joi.object().keys({
+        email: Joi.string().required().email(),
+        password: Joi.string().required().min(8),
+        name: Joi.string().min(2).max(30),
+        about: Joi.string().min(2).max(30),
+    })
+}), createUser);
 
+app.use(cookieParser());
 app.use(auth);
 
 app.use(routes);
