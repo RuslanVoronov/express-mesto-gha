@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 const cookieParser = require('cookie-parser');
-const auth = require('../middlewares/auth.js');
+const auth = require('../middlewares/auth');
 const { createUser, login } = require('../controllers/users');
 const NotFoundError = require('../errors/NotFoundError');
 const userRoutes = require('./users');

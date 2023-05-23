@@ -1,4 +1,8 @@
 {
+  "env": {
+    "es2021": true,
+    "node": true
+  },
   "extends": "airbnb-base",
   "rules": {
     "no-underscore-dangle": [
@@ -8,6 +12,11 @@
           "_id"
         ]
       }
-    ]
+    ],
+    "linebreak-style": [
+      0,
+      "error",
+      "windows"
+    ],
   }
 }
