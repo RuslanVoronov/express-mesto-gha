@@ -4,20 +4,20 @@ const jwt = require("jsonwebtoken");
 const NotFoundError = require("../errors/NotFoundError");
 const ValidationError = require("../errors/ValidationError");
 
-const getUsers = (req, res, next, err) => {
+const getUsers = (req, res, next) => {
 	User.find().then(users => {
 		res.send({ data: users });
-	});
-	next(err);
+	})
+		.catch(next);
 };
 
-const getCurrentUser = (req, res, next, err) => {
+const getCurrentUser = (req, res, next) => {
 	const id = req.user._id;
 	User.findById(id)
 		.then((user) => {
 			res.send({ data: user });
-		});
-	next(err);
+		})
+		.catch(next);
 };
 
 const getUserById = (req, res, next) => {

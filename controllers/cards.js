@@ -66,7 +66,7 @@ const likeCard = (req, res, next) => {
 		});
 };
 
-const dislikeCard = (req, res) => {
+const dislikeCard = (req, res, next) => {
 	const id = req.params.cardid;
 	Card.findByIdAndUpdate(
 		id,
@@ -75,7 +75,7 @@ const dislikeCard = (req, res) => {
 	)
 		.orFail(new Error("NotValidId"))
 		.then(card => res.send({ data: card }))
-		.catch((err, next) => {
+		.catch((err) => {
 			if (err.name === "CastError") {
 				next(new ValidationError("Некорректный id"));
 			}

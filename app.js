@@ -6,7 +6,6 @@ const routes = require("./routes");
 const errorHandler = require("./middlewares/errorHandler");
 
 const { PORT = 3000 } = process.env;
-const cookieParser = require("cookie-parser");
 const { errors } = require("celebrate");
 
 mongoose.connect("mongodb://127.0.0.1:27017/mesto");
@@ -16,11 +15,8 @@ const app = express();
 app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParse.json());
 
-app.use(cookieParser());
-
 app.use(routes);
 app.use(errors());
-
 app.use(errorHandler);
 
 app.listen(PORT, () => {

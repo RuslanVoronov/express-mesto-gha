@@ -2,6 +2,7 @@ const router = require("express").Router();
 const auth = require("../middlewares/auth.js");
 const { createUser, login } = require("../controllers/users");
 const { celebrate, Joi } = require("celebrate");
+const cookieParser = require("cookie-parser");
 const NotFoundError = require("../errors/NotFoundError");
 
 router.post("/signin", celebrate({
@@ -22,6 +23,7 @@ router.post("/signup", celebrate({
 		avatar: Joi.string().regex(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/)
 	})
 }), createUser);
+router.use(cookieParser());
 
 router.use(auth);
 
@@ -31,7 +33,7 @@ const cardRoutes = require("./cards");
 router.use("/users", userRoutes);
 router.use("/cards", cardRoutes);
 
-router.use("*", (req, res, next) => {
+router.use((req, res, next) => {
 	next(new NotFoundError("Что-то пошло не так"));
 });
 

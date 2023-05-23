@@ -1,4 +1,4 @@
-const { getUsers, getUserById, updateUser, updateAvatar, getCurrentUser } = require("../controllers/users");
+const { getUsers, getUserById, updateUser, updateAvatar, getCurrentUser, } = require("../controllers/users");
 const { celebrate, Joi } = require("celebrate");
 
 const router = require("express").Router();
