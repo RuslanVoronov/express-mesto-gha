@@ -23,7 +23,7 @@ const createCard = (req, res, next) => {
 
 };
 
-const deleteCard = (req, res) => {
+const deleteCard = (req, res, next) => {
 	const id = req.params.cardid;
 	Card.findByIdAndRemove(id)
 		.orFail(new Error("NotValidId"))
@@ -33,7 +33,7 @@ const deleteCard = (req, res) => {
 			}
 			res.send({ data: card });
 		})
-		.catch((err, next) => {
+		.catch((err) => {
 			if (err.name === "CastError") {
 				next(new ValidationError("Некорректный id"));
 			}
