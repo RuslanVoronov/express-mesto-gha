@@ -2,6 +2,7 @@ const { getCards, createCard, deleteCard, likeCard, dislikeCard } = require("../
 const { celebrate, Joi } = require("celebrate");
 const { errors } = require("celebrate");
 const router = require("express").Router();
+const validateCardId = require("../validate/validateCardId");
 
 router.get("/", getCards);
 
