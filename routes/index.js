@@ -4,6 +4,8 @@ const { createUser, login } = require("../controllers/users");
 const { celebrate, Joi } = require("celebrate");
 const cookieParser = require("cookie-parser");
 const NotFoundError = require("../errors/NotFoundError");
+const userRoutes = require("./users");
+const cardRoutes = require("./cards");
 
 router.post("/signin", celebrate({
 	body: Joi.object().keys({
@@ -26,9 +28,6 @@ router.post("/signup", celebrate({
 router.use(cookieParser());
 
 router.use(auth);
-
-const userRoutes = require("./users");
-const cardRoutes = require("./cards");
 
 router.use("/users", userRoutes);
 router.use("/cards", cardRoutes);

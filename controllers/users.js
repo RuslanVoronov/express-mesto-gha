@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const NotFoundError = require("../errors/NotFoundError");
 const ValidationError = require("../errors/ValidationError");
+const ConflictError = require("../errors/ConflictError");
 
 const getUsers = (req, res, next) => {
 	User.find().then(users => {
@@ -53,8 +54,7 @@ const createUser = (req, res, next) => {
 		}))
 		.catch((err) => {
 			if (err.code === 11000) {
-				res.status(409).send({ message: "Пользователь с таким email уже существует" });
-				return;
+				next(new ConflictError("Пользователь с таким email уже существует"));
 			}
 			if (err.message === "ValidationError") {
 				next(new ValidationError("Некорректный id"));
