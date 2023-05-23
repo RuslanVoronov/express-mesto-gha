@@ -100,14 +100,17 @@ const updateAvatar = (req, res, next) => {
 
 const login = (req, res, next) => {
 	const { email, password } = req.body;
-	console.log({ email, password });
+
 	User.findUserByCredentials(email, password)
 		.then((user) => {
 			const token = jwt.sign({ _id: user._id }, "some-secret-key", { expiresIn: "7d" });
+			console.log(res);
+
 			res.cookie("token", token, { httpOnly: true });
 			res.send({ token });
 		})
-		.catch(next(new UnauthorizedError("Неверные почта или пароль")));
+		.catch(next);
+        // next(new UnauthorizedError("Неверные почта или пароль"))
 };
 
 module.exports = {
