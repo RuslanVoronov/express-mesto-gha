@@ -6,7 +6,7 @@ module.exports = {
 	"extends": [
 		"eslint:recommended",
 		"plugin:react/recommended"
-	], 
+	],
 	"overrides": [
 	],
 	"parserOptions": {
@@ -21,10 +21,7 @@ module.exports = {
 			"error",
 			"tab"
 		],
-		"linebreak-style": [
-			"error",
-			"windows"
-		],
+		"linebreak-style": [0, "error", "windows"],
 		"quotes": [
 			"error",
 			"double"
